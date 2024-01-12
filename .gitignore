@@ -30,3 +30,5 @@ yarn-error.log*
 backend/node_modules
 backend/static
 backend/bet_data_fe_assessment.json
+yarn.lock
+backend/.env

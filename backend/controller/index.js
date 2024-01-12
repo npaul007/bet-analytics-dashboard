@@ -1,3 +1,6 @@
+const express = require("express");
+const Router = express.Router;
+const controllerRouter = new Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { getQueryResult } = require("../database");
@@ -20,14 +23,10 @@ const loginRoute = async (req, res) => {
 const registerRoute = async (req, res) => {
   const { email, password } = req.body;
 
-  const search = await getQueryResult(
-    `SELECT * FROM users WHERE email = "${email}"`
-  );
+  const search = await getQueryResult(`SELECT * FROM users WHERE email = "${email}"`);
 
   if (search[0]) {
-    res
-      .status(200)
-      .send({ message: "An account with this email already exists" });
+    res.status(200).send({ message: "An account with this email already exists" });
   } else {
     const id = generateRandomID();
     const passToSave = await bcrypt.hashSync(password, 10);
@@ -71,12 +70,10 @@ const getPlayersRoute = (req, res) => {
   });
 };
 
-const bind = (app) => {
-  app.post("/login", loginRoute);
+controllerRouter.post("/login", loginRoute);
 
-  app.post("/register", registerRoute);
+controllerRouter.post("/register", registerRoute);
 
-  app.get("/players", getPlayersRoute);
-};
+controllerRouter.get("/players", getPlayersRoute);
 
-module.exports = { bind };
+module.exports = { controllerRouter };

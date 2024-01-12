@@ -20,7 +20,7 @@ let sqlConfigs = {
   database: DATABASE_NAME,
 };
 
-if (JSON.parse(DATABASE_SSL)) {
+if (Boolean(DATABASE_SSL)) {
   sqlConfigs["ssl"] = {
     ca: fs.readFileSync(__dirname + "/certs/DigiCertGlobalRootCA.crt.pem"),
   };

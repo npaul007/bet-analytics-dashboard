@@ -9,18 +9,19 @@ const app = express();
 const { initDatabaseConnection } = require("./database");
 const { PORT } = require("./modules/constants");
 const { runPlayerService } = require("./modules/service/playerService");
+const { controllerRouter } = require("./controller");
 
 app.use(bodyParser.json());
 app.use(cors());
 
-require("./controller").bind(app);
+app.use(controllerRouter);
 
 app.listen(PORT, () => {
   try {
     console.log(`Server started on port ${PORT}`);
-    initDatabaseConnection(() => {
-      runPlayerService();
-    });
+    // initDatabaseConnection(() => {
+    //   runPlayerService();
+    // });
   } catch (err) {
     console.log("Server encountered error: ", err);
   }
