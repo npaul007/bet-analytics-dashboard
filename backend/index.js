@@ -19,9 +19,7 @@ app.use(controllerRouter);
 app.listen(PORT, () => {
   try {
     console.log(`Server started on port ${PORT}`);
-    // initDatabaseConnection(() => {
-    //   runPlayerService();
-    // });
+    initDatabaseConnection(() => {});
   } catch (err) {
     console.log("Server encountered error: ", err);
   }

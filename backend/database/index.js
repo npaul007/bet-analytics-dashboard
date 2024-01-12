@@ -1,4 +1,5 @@
 const mysql = require("mysql");
+const { Sequelize } = require("sequelize");
 const { eq } = require("lodash");
 const bcrypt = require("bcrypt");
 const fs = require("fs");
@@ -20,66 +21,26 @@ let sqlConfigs = {
   database: DATABASE_NAME,
 };
 
-if (Boolean(DATABASE_SSL)) {
+if (eq(DATABASE_SSL, "true")) {
   sqlConfigs["ssl"] = {
     ca: fs.readFileSync(__dirname + "/certs/DigiCertGlobalRootCA.crt.pem"),
   };
 }
 
-const con = mysql.createConnection(sqlConfigs);
+const sequelize = new Sequelize(DATABASE_NAME, DATABASE_USER, DATABASE_PASSWORD, {
+  host: DATABASE_HOST,
+  dialect: "mysql",
+});
 
-const executeQuery = (query, _callback) => {
-  con.query(query, _callback);
-};
-
-const queryCallback = (error, result) => {
-  if (error) {
-    console.log("Failed to run sql query due to error: ", error);
-  } else {
-    console.log("Query executed successfully:", result);
+const initDatabaseConnection = async (_callback = null) => {
+  try {
+    await sequelize.authenticate();
+    console.log("Connection has been established successfully.");
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
   }
-};
-
-const getQueryResult = (query) => {
-  return new Promise((resolve, reject) => {
-    executeQuery(query, (error, result) => {
-      if (error) {
-        reject("Failed to run sql query due to error: " + error);
-      } else {
-        resolve(result);
-      }
-    });
-  });
-};
-
-const createTables = () => {
-  executeQuery(
-    "CREATE TABLE IF NOT EXISTS `users` (	`id` VARCHAR(255) NOT NULL, `email` VARCHAR(255) NOT NULL,	`password` VARCHAR(255) NOT NULL, `created_at` DATETIME(6) NOT NULL, 	PRIMARY KEY (`id`));",
-    queryCallback
-  );
-
-  executeQuery(
-    "CREATE TABLE IF NOT EXISTS `players` (	`id` VARCHAR(255) NOT NULL, `first_name` VARCHAR(255) NOT NULL,	`last_name` VARCHAR(255) NOT NULL, `teams_played` LONGTEXT NOT NULL,	PRIMARY KEY (`id`));",
-    queryCallback
-  );
-};
-
-const initDatabaseConnection = (_callback = null) => {
-  con.connect(function (err) {
-    if (err) {
-      console.log("Failed to connect to mySQL server due to error: ", err);
-    }
-
-    console.log("Connected to mySQL server!");
-
-    createTables();
-
-    _callback && _callback();
-  });
 };
 
 module.exports = {
   initDatabaseConnection,
-  executeQuery,
-  getQueryResult,
 };
