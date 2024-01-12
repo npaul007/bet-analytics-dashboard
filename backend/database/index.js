@@ -12,6 +12,9 @@ const {
   DATABASE_PASSWORD,
   DATABASE_SSL,
 } = require("../modules/constants");
+const { Transactions } = require("../modules/models/Transactions");
+
+const Models = [Transactions];
 
 let sqlConfigs = {
   host: DATABASE_HOST,
@@ -32,10 +35,18 @@ const sequelize = new Sequelize(DATABASE_NAME, DATABASE_USER, DATABASE_PASSWORD,
   dialect: "mysql",
 });
 
+const initModels = () => {
+  Models.forEach((model) => {
+    model.init(model.getInitProps(), { sequelize, modelName: model.getName() });
+  });
+};
+
 const initDatabaseConnection = async (_callback = null) => {
   try {
     await sequelize.authenticate();
     console.log("Connection has been established successfully.");
+
+    initModels();
   } catch (error) {
     console.error("Unable to connect to the database:", error);
   }
