@@ -1,7 +1,5 @@
-const mysql = require("mysql");
 const { Sequelize } = require("sequelize");
 const { eq } = require("lodash");
-const bcrypt = require("bcrypt");
 const fs = require("fs");
 
 const {
@@ -47,6 +45,8 @@ const initDatabaseConnection = async (_callback = null) => {
     console.log("Connection has been established successfully.");
 
     initModels();
+
+    _callback && _callback();
   } catch (error) {
     console.error("Unable to connect to the database:", error);
   }
