@@ -10,9 +10,9 @@ const {
   DATABASE_PASSWORD,
   DATABASE_SSL,
 } = require("../modules/constants");
-const { Transactions } = require("../modules/models/Transactions");
+const { BetTransactions } = require("../modules/models/Transactions");
 
-const Models = [Transactions];
+const Models = [BetTransactions];
 
 let sqlConfigs = {
   host: DATABASE_HOST,
@@ -45,6 +45,8 @@ const initDatabaseConnection = async (_callback = null) => {
     console.log("Connection has been established successfully.");
 
     initModels();
+
+    await sequelize.sync({ force: true });
 
     _callback && _callback();
   } catch (error) {
