@@ -52,7 +52,7 @@ export const Home = () => {
       </ChartSection>
 
       <DimensionalAnalysisSection>
-        <h2>Dimensional Analysis</h2>
+        <p>Dimensional Analysis</p>
         <div>
           <label>Select Date Range:</label>
           <br />

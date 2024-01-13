@@ -20,6 +20,15 @@ export const DimensionalAnalysisSection = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+
+  @media screen and (max-width: 800px) {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  p {
+    font-weight: bolder;
+  }
 `;
 
 export const Dropdown = styled.select`
