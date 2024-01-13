@@ -7,10 +7,13 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   margin: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
 `;
 
 const ChartSection = styled.div`
   margin-bottom: 2rem;
+  text-align: center;
 `;
 
 const DimensionalAnalysisSection = styled.div`
@@ -51,16 +54,21 @@ export const Home = () => {
 
   // State for selected date range
   const [selectedDateRange, setSelectedDateRange] = useState(dateRanges[0]);
+
   let chart = null;
 
   useEffect(() => {
     // Initialize and render the time-series chart
     const timeSeriesCanvas = document.getElementById("timeSeriesChart");
-    chart && chart.destroy();
     chart = new Chart(timeSeriesCanvas, {
       type: "line",
       data: chartData,
     });
+
+    // when component unmounts
+    return () => {
+      chart.destroy();
+    };
   }, [chartData, chart]);
 
   return (
@@ -74,10 +82,11 @@ export const Home = () => {
         <h2>Dimensional Analysis</h2>
         <div>
           <label>Select Date Range:</label>
+          <br />
           <Dropdown
             onChange={(e) => {
-              setSelectedDateRange(e.target.value);
               chart && chart.destroy();
+              setSelectedDateRange(e.target.value);
             }}
             value={selectedDateRange}
           >
