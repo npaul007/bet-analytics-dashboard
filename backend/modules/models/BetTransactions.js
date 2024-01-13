@@ -4,6 +4,7 @@ class BetTransactions extends Model {}
 
 BetTransactions.getInitProps = () => {
   return {
+    actual: { type: DataTypes.DECIMAL(10, 2), allowNull: true },
     componentCntBet: { type: DataTypes.INTEGER, allowNull: true },
     selection: { type: DataTypes.STRING, allowNull: true },
     isInplay: { type: DataTypes.BOOLEAN, allowNull: true },

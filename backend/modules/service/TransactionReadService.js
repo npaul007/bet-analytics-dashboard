@@ -6,6 +6,7 @@ const writePath = __dirname.replace("modules/service", "static/");
 
 const getTransactionProps = (transaction) => {
   return {
+    actual: transaction.actual,
     componentCntBet: transaction.component_cnt_bet,
     selection: transaction.selection,
     isInplay: transaction.is_inplay,
