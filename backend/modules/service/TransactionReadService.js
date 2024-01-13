@@ -61,6 +61,8 @@ const saveTransactions = (transactions) => {
 const runTransactionRead = async () => {
   const foundTransactions = await BetTransactions.findAll();
 
+  let count = 0;
+
   if (foundTransactions.length === 0) {
     const readStream = fs.createReadStream(`${writePath}${DATA_FILE}`, {
       encoding: "utf8",
@@ -75,10 +77,21 @@ const runTransactionRead = async () => {
       if (capturedData.includes("{") && capturedData.includes("}")) {
         const firstIdx = capturedData.indexOf("{");
         const lastIdx = capturedData.lastIndexOf("}");
-        const tranche = capturedData.substring(firstIdx, lastIdx + 1).toString();
+        const tranche = capturedData
+          .substring(firstIdx, lastIdx + 1)
+          .toString();
         const transactions = JSON.parse(`[ ${tranche} ]`);
 
-        saveTransactions(transactions);
+        // cap entries saved to DB at 60,000
+        if (count < 60000) {
+          saveTransactions(transactions);
+          count += transactions.length;
+        } else {
+          console.log("60,000 transactions saved to db, closing read stream");
+
+          readStream.close();
+          readStream.destroy();
+        }
 
         capturedData = capturedData.substring(lastIdx + 2, capturedData.length);
       }
