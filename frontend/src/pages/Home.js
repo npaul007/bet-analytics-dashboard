@@ -44,7 +44,6 @@ export const Home = () => {
     ],
   };
 
-  // Sample data for dropdowns
   const dateRanges = [
     "Last 7 Days",
     "Last 30 Days",
@@ -52,8 +51,28 @@ export const Home = () => {
     "Last 6 Months",
   ];
 
-  // State for selected date range
+  const countries = [
+    "united states",
+    "canada",
+    "brazil",
+    "spain",
+    "gb",
+    "australia",
+  ];
+
+  const statTypes = [
+    "points",
+    "assists",
+    "three made",
+    "rebounds",
+    "double double",
+    "triple double",
+    "assists + rebounds",
+  ];
+
   const [selectedDateRange, setSelectedDateRange] = useState(dateRanges[0]);
+  const [selectedCountry, setSelectedCountry] = useState(countries[0]);
+  const [selectedStateType, setSelectedStatType] = useState(statTypes[0]);
 
   let chart = null;
 
@@ -93,6 +112,40 @@ export const Home = () => {
             {dateRanges.map((range, index) => (
               <option key={index} value={range}>
                 {range}
+              </option>
+            ))}
+          </Dropdown>
+        </div>
+        <div>
+          <label>Select Stat Type:</label>
+          <br />
+          <Dropdown
+            onChange={(e) => {
+              chart && chart.destroy();
+              setSelectedDateRange(e.target.value);
+            }}
+            value={selectedDateRange}
+          >
+            {statTypes.map((st, index) => (
+              <option key={index} value={st}>
+                {st}
+              </option>
+            ))}
+          </Dropdown>
+        </div>
+        <div>
+          <label>Select Country:</label>
+          <br />
+          <Dropdown
+            onChange={(e) => {
+              chart && chart.destroy();
+              setSelectedDateRange(e.target.value);
+            }}
+            value={selectedDateRange}
+          >
+            {countries.map((ct, index) => (
+              <option key={index} value={ct}>
+                {ct}
               </option>
             ))}
           </Dropdown>
