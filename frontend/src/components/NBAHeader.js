@@ -26,7 +26,7 @@ export const NBAHeader = () => {
   return (
     <NavHeader>
       <Title>NBA Transaction Dashboard</Title>
-      <Logo src="path/to/nba-logo.png" alt="NBA Logo" />
+      <Logo src={require("../assets/nba.png")} alt="NBA Logo" />
     </NavHeader>
   );
 };

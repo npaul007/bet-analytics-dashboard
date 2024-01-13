@@ -51,15 +51,17 @@ export const Home = () => {
 
   // State for selected date range
   const [selectedDateRange, setSelectedDateRange] = useState(dateRanges[0]);
+  let chart = null;
 
   useEffect(() => {
     // Initialize and render the time-series chart
     const timeSeriesCanvas = document.getElementById("timeSeriesChart");
-    new Chart(timeSeriesCanvas, {
+    chart && chart.destroy();
+    chart = new Chart(timeSeriesCanvas, {
       type: "line",
       data: chartData,
     });
-  }, [chartData]);
+  }, [chartData, chart]);
 
   return (
     <Container>
