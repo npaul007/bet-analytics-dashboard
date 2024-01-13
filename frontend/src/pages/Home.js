@@ -75,7 +75,10 @@ export const Home = () => {
         <div>
           <label>Select Date Range:</label>
           <Dropdown
-            onChange={(e) => setSelectedDateRange(e.target.value)}
+            onChange={(e) => {
+              setSelectedDateRange(e.target.value);
+              chart && chart.destroy();
+            }}
             value={selectedDateRange}
           >
             {dateRanges.map((range, index) => (

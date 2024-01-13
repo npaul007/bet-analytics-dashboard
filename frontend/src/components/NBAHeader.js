@@ -11,13 +11,12 @@ const NavHeader = styled.div`
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 `;
 
-const Title = styled.h1`
+const Title = styled.h4`
   margin: 0;
-  font-size: 1.5rem;
 `;
 
 const Logo = styled.img`
-  width: 40px; /* Adjust the size as needed */
+  width: 20px; /* Adjust the size as needed */
   height: auto;
 `;
 
