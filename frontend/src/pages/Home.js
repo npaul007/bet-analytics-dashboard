@@ -1,32 +1,12 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
 import Chart from "chart.js/auto";
-
-// Styled components
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 1rem;
-  max-width: 800px;
-  margin: 0 auto;
-`;
-
-const ChartSection = styled.div`
-  margin-bottom: 2rem;
-  text-align: center;
-`;
-
-const DimensionalAnalysisSection = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-`;
-
-const Dropdown = styled.select`
-  padding: 0.5rem;
-  font-size: 1rem;
-`;
+import { countries, statTypes, dateRanges } from "../modules/constants";
+import {
+  Container,
+  ChartSection,
+  DimensionalAnalysisSection,
+  Dropdown,
+} from "../components/HomeComponents";
 
 // React functional component
 export const Home = () => {
@@ -43,32 +23,6 @@ export const Home = () => {
       },
     ],
   };
-
-  const dateRanges = [
-    "Last 7 Days",
-    "Last 30 Days",
-    "Last 3 Months",
-    "Last 6 Months",
-  ];
-
-  const countries = [
-    "united states",
-    "canada",
-    "brazil",
-    "spain",
-    "gb",
-    "australia",
-  ];
-
-  const statTypes = [
-    "points",
-    "assists",
-    "three made",
-    "rebounds",
-    "double double",
-    "triple double",
-    "assists + rebounds",
-  ];
 
   const [selectedDateRange, setSelectedDateRange] = useState(dateRanges[0]);
   const [selectedCountry, setSelectedCountry] = useState(countries[0]);
