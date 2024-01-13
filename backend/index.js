@@ -23,7 +23,7 @@ app.listen(PORT, () => {
   try {
     console.log(`Server started on port ${PORT}`);
     initDatabaseConnection(() => {
-      // runTransactionRead();
+      runTransactionRead();
     });
   } catch (err) {
     console.log("Server encountered error: ", err);

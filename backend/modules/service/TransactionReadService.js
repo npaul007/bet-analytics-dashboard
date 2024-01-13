@@ -1,6 +1,6 @@
 const fs = require("fs");
 const { DATA_FILE } = require("../constants");
-const { BetTransactions } = require("../models/Transactions");
+const { BetTransactions } = require("../models/BetTransactions");
 
 const writePath = __dirname.replace("modules/service", "static/");
 

@@ -10,7 +10,7 @@ const {
   DATABASE_PASSWORD,
   DATABASE_SSL,
 } = require("../modules/constants");
-const { BetTransactions } = require("../modules/models/Transactions");
+const { BetTransactions } = require("../modules/models/BetTransactions");
 
 const Models = [BetTransactions];
 
@@ -46,7 +46,7 @@ const initDatabaseConnection = async (_callback = null) => {
 
     initModels();
 
-    await sequelize.sync({ force: true });
+    await sequelize.sync();
 
     _callback && _callback();
   } catch (error) {
