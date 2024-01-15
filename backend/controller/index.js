@@ -1,79 +1,45 @@
 const express = require("express");
 const Router = express.Router;
 const controllerRouter = new Router();
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const { getQueryResult } = require("../database");
-const { SECRET_KEY, ONE_DAY } = require("../modules/constants");
-const { generateRandomID, getCurDate } = require("../modules/utils");
+const { BetTransactions } = require("../modules/models/BetTransactions.js");
 
-const loginRoute = async (req, res) => {
-  const result = await getQueryResult(
-    `SELECT id, password FROM users WHERE email = "${req.body.email}"`
-  );
-  if (!result[0]) return res.send({ message: "invalid email/password" });
+const getTransactionsRoute = async (req, res) => {
+  const { statType, country } = req.query;
 
-  const validPass = await bcrypt.compare(req.body.password, result[0].password);
-  if (!validPass) return res.send({ message: "invalid email/password" });
+  const foundDates = await BetTransactions.findAll({
+    where: {
+      country: country,
+      statType: statType,
+    },
+    attributes: ["period"],
+    group: "period",
+  });
 
-  const token = jwt.sign({ id: result[0].id, time: Date.now() }, SECRET_KEY);
-  res.header("auth-token", token).send({ token: token });
-};
+  const periods = foundDates.map((fdObj) => fdObj?.period);
+  let transactionCount = {};
 
-const registerRoute = async (req, res) => {
-  const { email, password } = req.body;
+  for (let i = 0; i < periods.length; i++) {
+    const period = periods[i];
 
-  const search = await getQueryResult(`SELECT * FROM users WHERE email = "${email}"`);
+    const { count } = await BetTransactions.findAndCountAll({
+      where: {
+        country: country,
+        statType: statType,
+        period: period,
+      },
+    });
 
-  if (search[0]) {
-    res.status(200).send({ message: "An account with this email already exists" });
-  } else {
-    const id = generateRandomID();
-    const passToSave = await bcrypt.hashSync(password, 10);
-
-    await getQueryResult(`
-      INSERT INTO users (id, email, password, created_at)
-      VALUES ("${id}", "${email}", "${passToSave}", "${getCurDate()}")`);
-
-    const token = jwt.sign({ id: id, time: Date.now() }, SECRET_KEY);
-    res.header("auth-token", token).send({ token: token });
+    transactionCount[period] = count;
   }
-};
 
-const verifyCallback = (req, res, _callback) => {
-  const token = req.header("auth-token");
-  if (!token) return res.status(401).send("Access denied. No token provided");
-
-  try {
-    const { time } = jwt.verify(token, SECRET_KEY);
-
-    if (Date.now() - time < ONE_DAY) {
-      _callback();
-    } else {
-      return res.status(200).send({ message: "Token expired", expired: true });
-    }
-  } catch (err) {
-    console.log("Encountered error", err);
-    res.status(500).send({ message: err });
-  }
-};
-
-const getPlayersRoute = (req, res) => {
-  verifyCallback(req, res, async () => {
-    const result = await getQueryResult(`SELECT * FROM players`);
-
-    if (result) {
-      res.send({ players: result });
-    } else {
-      return res.send([]);
-    }
+  res.status(200).json({
+    data: {
+      periods,
+      transactionCount,
+    },
   });
 };
 
-controllerRouter.post("/login", loginRoute);
-
-controllerRouter.post("/register", registerRoute);
-
-controllerRouter.get("/players", getPlayersRoute);
+controllerRouter.get("/transactions", getTransactionsRoute);
 
 module.exports = { controllerRouter };
