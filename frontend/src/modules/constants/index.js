@@ -23,3 +23,5 @@ export const statTypes = [
   "triple double",
   "assists + rebounds",
 ];
+
+export const API_HOST = "http://localhost:4000/";
