@@ -17,7 +17,7 @@ export const Home = () => {
       {
         label: "Bet Transactions",
         data: [12, 19, 3, 5, 2],
-        borderColor: "rgba(75,192,192,1)",
+        borderColor: "rgba(255,0,255,1)",
         borderWidth: 2,
         fill: false,
       },
