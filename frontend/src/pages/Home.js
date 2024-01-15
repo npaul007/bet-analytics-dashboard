@@ -1,35 +1,58 @@
 import React, { useState, useEffect } from "react";
 import Chart from "chart.js/auto";
-import { countries, statTypes, dateRanges } from "../modules/constants";
+import { countries, statTypes } from "../modules/constants";
 import {
   Container,
   ChartSection,
   DimensionalAnalysisSection,
   Dropdown,
 } from "../components/HomeComponents";
+import { fetchTransactions } from "../modules/api";
+import { get } from "lodash";
 
-export const Home = () => {
-  const chartData = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+const getChartData = (data) => {
+  return {
+    labels: ["1.0", "2.0", "3.0", "4.0"],
     datasets: [
       {
         label: "Bet Transactions",
-        data: [12, 19, 3, 5, 2],
+        data: data,
         borderColor: "rgba(255,0,255,1)",
         borderWidth: 2,
         fill: false,
       },
     ],
   };
+};
 
-  const [selectedDateRange, setSelectedDateRange] = useState(dateRanges[0]);
+export const Home = () => {
+  let [chartData, setChartData] = useState(getChartData([]));
+
   const [selectedCountry, setSelectedCountry] = useState(countries[0]);
-  const [selectedStateType, setSelectedStatType] = useState(statTypes[0]);
+  const [selectedStatType, setSelectedStatType] = useState(statTypes[0]);
 
   let chart = null;
 
   useEffect(() => {
+    fetchTransactions(
+      { country: selectedCountry, statType: selectedStatType },
+      (data) => {
+        const transactionCount = get(data, "transactionCount", {});
+        let newData = [];
+        for (const key in transactionCount) {
+          if (key.includes(".00")) {
+            newData.push(transactionCount[key]);
+          }
+        }
+
+        setChartData(getChartData(newData));
+      }
+    );
+  }, [selectedCountry, selectedStatType, setChartData]);
+
+  useEffect(() => {
     const timeSeriesCanvas = document.getElementById("timeSeriesChart");
+    // eslint-disable-next-line
     chart = new Chart(timeSeriesCanvas, {
       type: "line",
       data: chartData,
@@ -51,31 +74,14 @@ export const Home = () => {
       <DimensionalAnalysisSection>
         <p>Dimensional Analysis</p>
         <div>
-          <label>Select Date Range:</label>
-          <br />
-          <Dropdown
-            onChange={(e) => {
-              chart && chart.destroy();
-              setSelectedDateRange(e.target.value);
-            }}
-            value={selectedDateRange}
-          >
-            {dateRanges.map((range, index) => (
-              <option key={index} value={range}>
-                {range}
-              </option>
-            ))}
-          </Dropdown>
-        </div>
-        <div>
           <label>Select Stat Type:</label>
           <br />
           <Dropdown
             onChange={(e) => {
               chart && chart.destroy();
-              setSelectedDateRange(e.target.value);
+              setSelectedStatType(e.target.value);
             }}
-            value={selectedDateRange}
+            value={selectedStatType}
           >
             {statTypes.map((st, index) => (
               <option key={index} value={st}>
@@ -90,9 +96,9 @@ export const Home = () => {
           <Dropdown
             onChange={(e) => {
               chart && chart.destroy();
-              setSelectedDateRange(e.target.value);
+              setSelectedCountry(e.target.value);
             }}
-            value={selectedDateRange}
+            value={selectedCountry}
           >
             {countries.map((ct, index) => (
               <option key={index} value={ct}>
