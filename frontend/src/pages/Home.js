@@ -8,9 +8,7 @@ import {
   Dropdown,
 } from "../components/HomeComponents";
 
-// React functional component
 export const Home = () => {
-  // Sample data for chart
   const chartData = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May"],
     datasets: [
@@ -31,14 +29,12 @@ export const Home = () => {
   let chart = null;
 
   useEffect(() => {
-    // Initialize and render the time-series chart
     const timeSeriesCanvas = document.getElementById("timeSeriesChart");
     chart = new Chart(timeSeriesCanvas, {
       type: "line",
       data: chartData,
     });
 
-    // when component unmounts
     return () => {
       chart.destroy();
     };
