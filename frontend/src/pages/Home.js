@@ -47,7 +47,7 @@ export const Home = () => {
   return (
     <Container>
       <ChartSection>
-        <h2>Time-Series Analysis</h2>
+        <h2>Quarter-by-Quarter Time-Series Analysis</h2>
         <h3>Minnesota Timberwolves vs Utah Jazz 11-04-2023</h3>
         <canvas id="timeSeriesChart" width="400" height="200"></canvas>
       </ChartSection>
