@@ -1,0 +1,17 @@
+Steps to run project
+1.before running the project, remember to run "npm i" in both "frontend" and "backend" directories
+
+2. make sure the .env file within the "backend" directory is configured to connect to your local mysql db
+   here's an example:
+    NODE_ENV=dev
+    DATABASE_NAME=bet
+    DATABASE_HOST=127.0.0.1
+    DATABASE_PORT=3306
+    DATABASE_USER=root
+    DATABASE_PASSWORD=password
+    DATABASE_SSL=false
+    PORT=4000
+    SECRET_KEY=ilovebetting
+    DATA_FILE=bet_data_fe_assessment.json
+
+3. To run the project run "npm run start" within the "frontend" directory, and run "node index.js" within the "backend" directory
